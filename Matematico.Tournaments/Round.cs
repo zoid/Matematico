@@ -8,7 +8,7 @@ using Matematico.Game;
 
 namespace Matematico.Tournaments
 {
-    class Round
+    public class Round
     {
         public GameType Type;
         public bool Finished;
