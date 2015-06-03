@@ -18,7 +18,9 @@ namespace Matematico.Game
 
         void Click(object button);
 
+        void Disconnect();
 
+        void Dispose();
         #endregion
     }
 }

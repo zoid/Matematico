@@ -11,7 +11,7 @@ using Matematico.Game;
 
 namespace Matematico.ClientSide
 {
-    public class LocalGame : IGame
+    public class LocalGame : IGame, IDisposable
     {
         #region Variables
 
@@ -24,7 +24,7 @@ namespace Matematico.ClientSide
         private int Index;
         
         //Player information
-        public string Username;
+        private string Username;
 
         //Game Form
         private GameForm Form;
@@ -38,7 +38,7 @@ namespace Matematico.ClientSide
 
         #endregion
 
-        public LocalGame()
+        public LocalGame(string username)
         {
             Form = new GameForm(this);
 
@@ -47,8 +47,14 @@ namespace Matematico.ClientSide
             timer.Enabled = false;
 
             CanPlace = false;
+            Username = username;
 
             Form.HideGenerator();
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
 
         public void ShowForm()
@@ -97,6 +103,11 @@ namespace Matematico.ClientSide
 
             Form.ShowResult(result);
             Form.HideGenerator();
+        }
+
+        public void Disconnect()
+        {
+            return;
         }
 
         private int[] GenerateNumbers()

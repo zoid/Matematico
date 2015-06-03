@@ -7,11 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+using Matematico.Game;
+
 namespace Matematico.ClientSide.Forms
 {
     public partial class StartupForm : Form
     {
+        
         string name;
+        IGame Game;
 
         public StartupForm()
         {
@@ -35,10 +39,8 @@ namespace Matematico.ClientSide.Forms
 
         private void bt_singlegame_Click(object sender, EventArgs e)
         {
-            LocalGame game = new LocalGame();
-            
-            game.Username = name;
-            game.ShowForm();
+            Game = new LocalGame(name);
+            Game.ShowForm();
 
             this.Hide();
         }
@@ -52,9 +54,9 @@ namespace Matematico.ClientSide.Forms
 
         private void bt_multiplayer_Click(object sender, EventArgs e)
         {
-            LanGame game = new LanGame(name);
+            Game = new LanGame(name);
 
-            game.ShowForm();
+            Game.ShowForm();
             this.Hide();
         }
 
@@ -63,6 +65,14 @@ namespace Matematico.ClientSide.Forms
             if (e.KeyCode == Keys.Enter)
             {
                 bt_login_Click(bt_login, EventArgs.Empty);
+            }
+        }
+
+        private void StartupForm_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible == true && Game != null)
+            {
+                Game.Dispose();
             }
         }
     }

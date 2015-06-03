@@ -199,5 +199,10 @@ namespace Matematico.ClientSide.Forms
             }
         }
 
+        private void GameForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Game.Disconnect();
+        }
+
     }
 }

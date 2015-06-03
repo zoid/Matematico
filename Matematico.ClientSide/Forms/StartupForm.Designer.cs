@@ -145,6 +145,7 @@ namespace Matematico.ClientSide.Forms
             this.Controls.Add(this.p_menu);
             this.Name = "StartupForm";
             this.Text = "Matematico";
+            this.VisibleChanged += new System.EventHandler(this.StartupForm_VisibleChanged);
             this.p_menu.ResumeLayout(false);
             this.p_login.ResumeLayout(false);
             this.p_login.PerformLayout();

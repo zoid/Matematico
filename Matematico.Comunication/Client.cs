@@ -17,7 +17,7 @@ namespace Matematico.Comunication
         private NetClient client;
         private ConnectionCallback Status;
         private DataRecieveCallback Recieve;   
-        private string username;
+        private string Username;
 
         public Client(string _username, ConnectionCallback _connection, DataRecieveCallback _data)
         {
@@ -28,14 +28,14 @@ namespace Matematico.Comunication
             client.RegisterReceivedCallback(new SendOrPostCallback(GotMessage));
             client.Start();
 
-            username = _username;
+            Username = _username;
             Status = _connection;
             Recieve = _data;
         }
 
         public void Connect(string host, ushort port)
         {          
-            client.Connect(host, port);
+            client.Connect(host, port, client.CreateMessage(Username));
         }
 
         public void Disconnect()
@@ -62,7 +62,6 @@ namespace Matematico.Comunication
                         if (status == NetConnectionStatus.Connected)
                         {
                             Status(true);
-                            Send("/name " + username);
                         }
                         else
                             Status(false);
@@ -81,6 +80,7 @@ namespace Matematico.Comunication
         public void Send(string text)
         {
             NetOutgoingMessage om = client.CreateMessage(text);
+
             client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
             client.FlushSendQueue();
         }       

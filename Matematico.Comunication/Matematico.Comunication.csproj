@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="Server.cs" />
-    <Compile Include="UpdateType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

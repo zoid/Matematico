@@ -15,7 +15,7 @@ using Matematico.Game;
 
 namespace Matematico.ClientSide
 {
-    public class LanGame : IGame
+    public class LanGame : IGame, IDisposable
     {
         #region Variables
 
@@ -28,6 +28,8 @@ namespace Matematico.ClientSide
 
         //Player information
         public string Username;
+
+        private bool Disconnecting;
 
         //Timer
         Timer timer;
@@ -60,7 +62,12 @@ namespace Matematico.ClientSide
             reconnect.Interval = 500;
             reconnect.Enabled = false;
 
+            Disconnecting = false;
             CanPlace = false;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
 
         public void ShowForm()
@@ -77,8 +84,6 @@ namespace Matematico.ClientSide
                 Form.Status.ForeColor = Color.Green;
                 Form.Status.Text = "Připojeno";
 
-                client.Send("/name " + Username);
-
                 reconnect.Stop();
             }
             else
@@ -86,7 +91,8 @@ namespace Matematico.ClientSide
                 Form.Status.ForeColor = Color.Red;
                 Form.Status.Text = "Nepřipojeno";
 
-                reconnect.Start();
+                if(!Disconnecting)
+                    reconnect.Start();
             }
         }
 
@@ -158,6 +164,12 @@ namespace Matematico.ClientSide
 
             btn.Value = Numbers[Index];
             CanPlace = false;
+        }
+
+        public void Disconnect()
+        {
+            Disconnecting = true;
+            client.Disconnect();
         }
 
         private void timer_Tick(object sender, EventArgs e)
