@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="ExcelParser.cs" />
     <Compile Include="Round.cs" />
-    <Compile Include="Tournament.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">

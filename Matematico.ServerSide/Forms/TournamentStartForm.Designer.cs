@@ -1,6 +1,6 @@
-namespace matematico_server
+namespace Matematico.ServerSide.Forms
 {
-    partial class TurnajStartForm
+    partial class TournamentStartForm
     {
         /// <summary>
         /// Required designer variable.
@@ -106,7 +106,7 @@ namespace matematico_server
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label6.Location = new System.Drawing.Point(12, 41);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(93, 16);
+            this.label6.Size = new System.Drawing.Size(96, 16);
             this.label6.TabIndex = 6;
             this.label6.Text = "Seznam her:";
             // 
@@ -116,7 +116,7 @@ namespace matematico_server
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label7.Location = new System.Drawing.Point(344, 41);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(119, 16);
+            this.label7.Size = new System.Drawing.Size(122, 16);
             this.label7.TabIndex = 7;
             this.label7.Text = "Početní formule:";
             // 
@@ -126,7 +126,7 @@ namespace matematico_server
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label8.Location = new System.Drawing.Point(344, 67);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(161, 16);
+            this.label8.Size = new System.Drawing.Size(189, 16);
             this.label8.TabIndex = 8;
             this.label8.Text = "X = M - (2 * N) + (P - O)";
             // 
@@ -162,7 +162,7 @@ namespace matematico_server
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // TurnajStartForm
+            // TournamentStartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -179,8 +179,9 @@ namespace matematico_server
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "TurnajStartForm";
-            this.Text = "TurnajStartForm";
+            this.Name = "TournamentStartForm";
+            this.Text = "TournamentStartForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TournamentStartForm_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

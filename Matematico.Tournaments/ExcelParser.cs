@@ -11,6 +11,7 @@ namespace Matematico.Tournaments
     public class ExcelParser
     {
         Excel.Application app = new Excel.Application();
+        Excel.Worksheet Sheet;
 
         public ExcelParser()
         {
@@ -21,24 +22,36 @@ namespace Matematico.Tournaments
             }
 
             app.Visible = true;
+
+            Excel.Workbook wb = app.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+            Sheet = (Excel.Worksheet)wb.Worksheets[1];
+        }
+
+        public void CreateHeader(string tournamentName)
+        {
+            Sheet.Cells[1, 1] = "Název Turnaje: ";
+            Sheet.Cells[1, 2] = tournamentName;
+
+            Sheet.get_Range("A:A", System.Type.Missing).EntireColumn.ColumnWidth = 100;
+
+            Sheet.Cells[2, 1] = "Jméno";
+            Sheet.Cells[2, 2] = "1. kolo";
+            Sheet.Cells[2, 3] = "2. kolo";
+            Sheet.Cells[2, 4] = "3. kolo";
+            Sheet.Cells[2, 5] = "Celkem";
         }
 
         public void WriteNames(string[] names)
         {
-            Excel.Workbook wb = app.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
-            Excel.Worksheet ws = (Excel.Worksheet)wb.Worksheets[1];
-
-            if (ws == null)
+            if (Sheet == null)
             {
                 throw new Exception("EXCEL nebyl nalezen, ujistěte se, že je na pc nainstalována aktuální verze MS Excel. Případně vypněte v nastavení " +
                                     "možnost \"Ukládat výsledky do excelu\"");
             }
 
-            ws.Cells[1, 1] = "Jméno";
-
             for (int i = 0; i < names.Length;i++ )
             {
-                ws.Cells[2+i,1] = names[i];
+                Sheet.Cells[3 + i, 1] = names[i];
             }
         }
     }

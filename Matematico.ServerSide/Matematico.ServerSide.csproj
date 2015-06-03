@@ -41,6 +41,9 @@
     <Reference Include="Matematico.Game">
       <HintPath>..\Matematico.Game\bin\Debug\Matematico.Game.dll</HintPath>
     </Reference>
+    <Reference Include="Matematico.Tournaments">
+      <HintPath>..\Matematico.Tournaments\bin\Debug\Matematico.Tournaments.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -65,14 +68,15 @@
     <Compile Include="Forms\StartupForm.Designer.cs">
       <DependentUpon>StartupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TurnajStartForm.cs">
+    <Compile Include="Forms\TournamentStartForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\TurnajStartForm.Designer.cs">
-      <DependentUpon>TurnajStartForm.cs</DependentUpon>
+    <Compile Include="Forms\TournamentStartForm.Designer.cs">
+      <DependentUpon>TournamentStartForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LanGame.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Tournament.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\GameForm.resx">
@@ -81,8 +85,8 @@
     <EmbeddedResource Include="Forms\StartupForm.resx">
       <DependentUpon>StartupForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TurnajStartForm.resx">
-      <DependentUpon>TurnajStartForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\TournamentStartForm.resx">
+      <DependentUpon>TournamentStartForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
