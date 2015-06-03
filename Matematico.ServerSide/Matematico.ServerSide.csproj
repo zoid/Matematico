@@ -31,6 +31,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lidgren.Network\bin\Debug\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="Matematico.Comunication">
       <HintPath>..\Matematico.Comunication\bin\Debug\Matematico.Comunication.dll</HintPath>
     </Reference>

@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Lidgren.Network;
+
 using Matematico.Comunication;
 using Matematico.Game;
 using Matematico.ServerSide.Forms;
@@ -26,7 +28,7 @@ namespace Matematico.ServerSide
         public bool Active = false;
 
         //Players informations
-        public Dictionary<string, string> Players;
+        public Dictionary<string, string> Names;
         public List<PlayerResult> Results;
 
         private GameForm Form;
@@ -41,11 +43,14 @@ namespace Matematico.ServerSide
         public LanGame(GameType type)
         {
             Type = type;
-            Players = new Dictionary<string, string>();
+            Names = new Dictionary<string, string>();
 
-            server = new Server(new UpdateCallback(RecieveUpdate), new DataCallback(RecieveMessage));
+            server = new Server(    new ConnectedCallback(Connected), 
+                                    new DisconnectedCallback(Disconnected), 
+                                    new MessageCallback(RecieveMessage)
+                               );
             
-            //Register server
+            // Register server event
             Application.Idle += new EventHandler(server.WaitForMessage);
 
             Form = new GameForm(this);
@@ -68,18 +73,34 @@ namespace Matematico.ServerSide
         public void Start()
         {
             Numbers = GenerateNumbers();
-
-            Tick = Timelimit = Form.TimeBar.Value;
+            Timelimit = Form.TimeBar.Value;
+            Tick = Timelimit * 10;
             Index = 0;
 
             server.Send("/timelimit " + Timelimit.ToString());
             server.Send("/numbers " + String.Join(";", Numbers));
             server.Send("/start");
 
+            //Show form items
             Form.DisplayItems();
+        
+            //Clear result box
+            Form.Results.Items.Clear();
+
+            //Setup progress bar
+            Form.Progress.Maximum = Tick;
+            Form.Progress.Value = Tick;
+
+            //Start timer
+            timer.Start();
         }
 
-        public void RecieveMessage(string user, string message)
+        public void Stop()
+        {
+            timer.Stop();
+        }
+
+        public void RecieveMessage(string userId, string message)
         {
             CommandType type = CommandParser.GetType(message);
             if (type == CommandType.NaC) return;
@@ -87,12 +108,12 @@ namespace Matematico.ServerSide
             switch (type)
             {
                 case CommandType.Name:
-                    if (Players.ContainsKey(user))
-                    {
-                        Players.Remove(user);
-                    }
+                    if (Names.ContainsKey(userId))
+                        Names.Remove(userId);
 
-                    Players.Add(user, CommandParser.GetContent(message));
+                    Names.Add(userId, CommandParser.GetContent(message));
+                    Form.Users.Invalidate();   
+   
                     break;
 
                 case CommandType.Result:
@@ -103,22 +124,28 @@ namespace Matematico.ServerSide
 
         }
 
-        public void RecieveUpdate(UpdateType type)
+        public void Connected(string UID, string Username)
         {
-            switch (type)
-            {
-                case UpdateType.User:
-                    Form.Users.Items.Clear();
-                    string[] arr = Players.Select(item => item.Value).OrderBy(item => item).ToArray();
+            if(Names.ContainsKey(UID)) Names.Remove(UID);
+            Names.Add(UID, Username);
             
-                    foreach(var name in arr)
-                        Form.Users.Items.Add(name);
+            Form.Users.Items.Add(Names[UID]);
+            Form.ConnectedUsers.Text = server.GetConnections().Length.ToString();
 
-                    if (arr.Length > 0) Form.StartButton.Enabled = true;
-                    else Form.StartButton.Enabled = false;
+            if (server.GetConnections().Length > 0) Form.StartButton.Enabled = true;
+        }
 
-                    break;
+        public void Disconnected(string UID)
+        {
+            if (Names.ContainsKey(UID))
+            {
+                Form.Users.Items.RemoveAt(Form.Users.FindStringExact(Names[UID]));
+                Names.Remove(UID);
             }
+
+            Form.ConnectedUsers.Text = server.GetConnections().Length.ToString();
+
+            if (server.GetConnections().Length == 0) Form.StartButton.Enabled = false;
         }
 
 
@@ -145,7 +172,25 @@ namespace Matematico.ServerSide
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            Form.Progress.Value = Tick;
 
+            if(Tick > 0)
+            {
+                Tick--;
+                return;
+            }
+
+            Index++;
+            Tick = Timelimit * 10;
+
+            if(Index == MAX_NUMBERS)
+            {
+                Stop();
+                return;
+            }
+
+            Form.Number.Text = Numbers[Index].ToString();
+            Form.NumbersCount.Text = (Index + 1).ToString();
         }
     }
 }

@@ -12,8 +12,10 @@ using Lidgren.Network;
 
 namespace Matematico.Comunication
 {
-    public delegate void UpdateCallback(UpdateType update);
-    public delegate void DataCallback(string userId, string data);
+    public delegate void DisconnectedCallback(string UID);
+    public delegate void ConnectedCallback(string UID, string Username);
+    public delegate void MessageCallback(string UID, string Message);
+
     public class Server
     {
         #region DLL Imports
@@ -46,14 +48,16 @@ namespace Matematico.Comunication
         private NetServer server;
         private bool Started = false;
 
-        private UpdateCallback Update;
-        private DataCallback Data;
+        private ConnectedCallback Connected;
+        private DisconnectedCallback Disconnected;
+        private MessageCallback Message;
         #endregion
 
-        public Server(UpdateCallback _update, DataCallback _data)
+        public Server(ConnectedCallback _connected, DisconnectedCallback _disconnected, MessageCallback _msg)
         {
-            Update = _update;
-            Data = _data;
+            Connected = _connected;
+            Disconnected = _disconnected;
+            Message = _msg;
         }
 
         #region Configuration / Start
@@ -86,6 +90,9 @@ namespace Matematico.Comunication
                 NetIncomingMessage im;
                 while ((im = server.ReadMessage()) != null)
                 {
+                    if(im.MessageType != NetIncomingMessageType.DebugMessage && im.MessageType != NetIncomingMessageType.WarningMessage) 
+                        Message(im.MessageType.ToString(), im.SenderConnection.Status.ToString());
+                    
                     switch (im.MessageType)
                     {
                         case NetIncomingMessageType.DebugMessage:
@@ -96,14 +103,20 @@ namespace Matematico.Comunication
 
 
                         case NetIncomingMessageType.StatusChanged:
+                            if(im.SenderConnection.Status == NetConnectionStatus.Connected) 
+                                Connected(NetUtility.ToHexString(im.SenderConnection.RemoteUniqueIdentifier), im.SenderConnection.RemoteHailMessage.ReadString());
+
+                            if(im.SenderConnection.Status == NetConnectionStatus.Disconnected)
+                                Disconnected(NetUtility.ToHexString(im.SenderConnection.RemoteUniqueIdentifier));
+
+                            break;
+
                         case NetIncomingMessageType.UnconnectedData:
-                            Update(UpdateType.User);
+                           
                             break;
                         
                         case NetIncomingMessageType.Data:
-                            Data(NetUtility.ToHexString(im.SenderConnection.RemoteUniqueIdentifier), im.ReadString());
-                            Update(UpdateType.Result);
-                            Update(UpdateType.User);
+                            Message(NetUtility.ToHexString(im.SenderConnection.RemoteUniqueIdentifier), im.ReadString());
                             break;
 
                         default:
@@ -117,19 +130,24 @@ namespace Matematico.Comunication
 
         public String[] GetConnections()
         {
-            String[] users = new String[server.ConnectionsCount];
-            users = server.Connections.Select(item => NetUtility.ToHexString(item.RemoteUniqueIdentifier)).ToArray<string>();
-
-            return users;
+            return server.Connections.Select(item => NetUtility.ToHexString(item.RemoteUniqueIdentifier)).ToArray<string>();
         }
 
-        public void Send(string message)
+        public bool Send(string message)
         {
             List<NetConnection> all = server.Connections;
-            NetOutgoingMessage om = server.CreateMessage();
+            NetOutgoingMessage om = server.CreateMessage(message);
 
-            om.Write(message);
-            server.SendMessage(om, all, NetDeliveryMethod.ReliableOrdered, 0);
+            try
+            {
+                server.SendMessage(om, all, NetDeliveryMethod.ReliableOrdered, 0);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         

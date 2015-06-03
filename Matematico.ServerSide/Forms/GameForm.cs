@@ -20,15 +20,16 @@ namespace Matematico.ServerSide.Forms
 
         private LanGame Game;
 
-        int index;
-        int tick;
-        int substep;
-        int timelimit;
-
         public ListBox Users
         {
             get { return box_users; }
             set { box_users = value; }
+        }
+
+        public ListBox Results
+        {
+            get { return box_results; }
+            set { box_results = value; }
         }
 
         public Button StartButton
@@ -42,6 +43,32 @@ namespace Matematico.ServerSide.Forms
             get { return bar_time; }
             set { bar_time = value; }
         }
+
+        public ProgressBar Progress
+        {
+            get { return pBar_time; }
+            set { pBar_time = value; }
+        }
+
+        public Label Number
+        {
+            get { return lb_generated; }
+            set { lb_generated = value; }
+        }
+
+        public Label ConnectedUsers
+        {
+            get { return lb_connectedUsers; }
+            set { lb_connectedUsers = value; }
+        }
+
+        public Label NumbersCount
+        {
+            get { return lb_actualNumberCount; }
+            set { lb_actualNumberCount = value; }
+        }
+
+        
 
         #endregion
 
@@ -75,7 +102,7 @@ namespace Matematico.ServerSide.Forms
 
             foreach(string user in Game.server.GetConnections())
             {
-                box_users.Items.Add(Game.Players[user]);
+                box_users.Items.Add(Game.Names[user]);
             }
         }
 
@@ -119,40 +146,6 @@ namespace Matematico.ServerSide.Forms
             Game.Start();
         }
 
-        private void tm_gametime_Tick(object sender, EventArgs e)
-        {
-            /*if (tick == 0 && substep == 0)
-            {
-                tick = timelimit;
-                pBar_time.Value = timelimit * 10;
-                substep = 0;
-
-                index++;
-                lb_actualNumberCount.Text = (index + 1).ToString();
-
-                if (index == 25)
-                {
-                    ChangeBoardState(false);
-                    engine.TerminateGame();
-                    queue = new int[25];
-                    return;
-                }
-
-                lb_generated.Text = queue[index].ToString();
-            }
-
-            if (substep == 0)
-            {
-                tick--;
-                substep = 10;
-            }
-
-            substep--;
-            pBar_time.Value = tick * 10 + substep;*/
-
-
-        }
-
         public void DisplayItems(bool start = true)
         {
             //Buttons
@@ -173,8 +166,6 @@ namespace Matematico.ServerSide.Forms
             if (start)
             {
                 lb_generated.Text = Game.Numbers[0].ToString();
-                pBar_time.Maximum = timelimit * 10;
-
                 box_results.Items.Clear();
             }
         }

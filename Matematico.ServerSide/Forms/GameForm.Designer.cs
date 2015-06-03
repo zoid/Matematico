@@ -28,7 +28,6 @@ namespace Matematico.ServerSide.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.box_users = new System.Windows.Forms.ListBox();
             this.bar_users = new System.Windows.Forms.GroupBox();
             this.bar_results = new System.Windows.Forms.GroupBox();
@@ -36,7 +35,6 @@ namespace Matematico.ServerSide.Forms
             this.lb_generated = new System.Windows.Forms.Label();
             this.bt_end = new System.Windows.Forms.Button();
             this.bt_start = new System.Windows.Forms.Button();
-            this.tm_gametime = new System.Windows.Forms.Timer(this.components);
             this.bar_time = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
             this.lb_time = new System.Windows.Forms.Label();
@@ -46,9 +44,9 @@ namespace Matematico.ServerSide.Forms
             this.lb_actualNumberCount = new System.Windows.Forms.Label();
             this.lb_acutalNumberCountLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.lb_connectedUsers = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.bar_users.SuspendLayout();
             this.bar_results.SuspendLayout();
@@ -130,10 +128,6 @@ namespace Matematico.ServerSide.Forms
             this.bt_start.UseVisualStyleBackColor = true;
             this.bt_start.Click += new System.EventHandler(this.bt_start_Click);
             // 
-            // tm_gametime
-            // 
-            this.tm_gametime.Tick += new System.EventHandler(this.tm_gametime_Tick);
-            // 
             // bar_time
             // 
             this.bar_time.Location = new System.Drawing.Point(61, 19);
@@ -214,7 +208,7 @@ namespace Matematico.ServerSide.Forms
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.lb_connectedUsers);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.lb_iplabel);
             this.groupBox1.Controls.Add(this.lb_acutalNumberCountLabel);
@@ -227,26 +221,6 @@ namespace Matematico.ServerSide.Forms
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Informace";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(6, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(118, 13);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "Aktuálně připojeno:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(129, 39);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(13, 13);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "0";
-            this.label4.Visible = false;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -256,6 +230,26 @@ namespace Matematico.ServerSide.Forms
             this.label3.Size = new System.Drawing.Size(85, 13);
             this.label3.TabIndex = 17;
             this.label3.Text = "Taženo čísel:";
+            // 
+            // lb_connectedUsers
+            // 
+            this.lb_connectedUsers.AutoSize = true;
+            this.lb_connectedUsers.Location = new System.Drawing.Point(129, 39);
+            this.lb_connectedUsers.Name = "lb_connectedUsers";
+            this.lb_connectedUsers.Size = new System.Drawing.Size(13, 13);
+            this.lb_connectedUsers.TabIndex = 16;
+            this.lb_connectedUsers.Text = "0";
+            this.lb_connectedUsers.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label2.Location = new System.Drawing.Point(6, 39);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(118, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Aktuálně připojeno:";
             // 
             // groupBox2
             // 
@@ -307,7 +301,6 @@ namespace Matematico.ServerSide.Forms
         private System.Windows.Forms.Label lb_generated;
         private System.Windows.Forms.Button bt_end;
         private System.Windows.Forms.Button bt_start;
-        private System.Windows.Forms.Timer tm_gametime;
         private System.Windows.Forms.TrackBar bar_time;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lb_time;
@@ -318,7 +311,7 @@ namespace Matematico.ServerSide.Forms
         private System.Windows.Forms.Label lb_acutalNumberCountLabel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lb_connectedUsers;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
     }
