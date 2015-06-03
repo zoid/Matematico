@@ -152,8 +152,6 @@ namespace Matematico.ServerSide.Forms
             bt_start.Enabled = !start;
 
             //Labels
-            lb_ip.Visible = !start;
-            lb_iplabel.Visible = !start;
             lb_generated.Visible = start;
 
             lb_actualNumberCount.Visible = start;

@@ -10,6 +10,7 @@ namespace Matematico.ServerSide
     {
         NaC, 
         Name, 
-        Result
+        Result,
+        Missing
     }
 }

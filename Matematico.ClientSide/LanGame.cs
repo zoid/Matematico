@@ -104,7 +104,13 @@ namespace Matematico.ClientSide
             switch (type)
             {
                 case CommandType.Start:
-                    Start();
+                    if(Numbers == null || Numbers.Length == 0)
+                        client.AskForNumbers();
+                    else if(Timelimit == 0)
+                        client.AskForTimelimit();
+                    else
+                        Start();
+
                     break;
 
                 case CommandType.Numbers:
@@ -127,11 +133,13 @@ namespace Matematico.ClientSide
             CanPlace = true;
             Index = 0;
 
+            Form.Number.Text = Numbers[Index].ToString();
+
             Form.ClearBoard();
             Form.ShowGenerator();
             Form.HideResult();
 
-            Tick = Timelimit;
+            Tick = Timelimit * 10;
             timer.Start();
         }
 
@@ -191,7 +199,10 @@ namespace Matematico.ClientSide
             if (Index == Numbers.Length)
             {
                 Stop();
+                return;
             }
+
+            Form.Number.Text = Numbers[Index].ToString();
         }
 
         private void reconnect_Tick(object sender, EventArgs e)

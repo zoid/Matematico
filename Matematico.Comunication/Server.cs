@@ -95,13 +95,6 @@ namespace Matematico.Comunication
                     
                     switch (im.MessageType)
                     {
-                        case NetIncomingMessageType.DebugMessage:
-                        case NetIncomingMessageType.ErrorMessage:
-                        case NetIncomingMessageType.WarningMessage:
-                        case NetIncomingMessageType.VerboseDebugMessage:
-                            break;
-
-
                         case NetIncomingMessageType.StatusChanged:
                             if(im.SenderConnection.Status == NetConnectionStatus.Connected) 
                                 Connected(NetUtility.ToHexString(im.SenderConnection.RemoteUniqueIdentifier), im.SenderConnection.RemoteHailMessage.ReadString());
@@ -109,10 +102,6 @@ namespace Matematico.Comunication
                             if(im.SenderConnection.Status == NetConnectionStatus.Disconnected)
                                 Disconnected(NetUtility.ToHexString(im.SenderConnection.RemoteUniqueIdentifier));
 
-                            break;
-
-                        case NetIncomingMessageType.UnconnectedData:
-                           
                             break;
                         
                         case NetIncomingMessageType.Data:
@@ -150,6 +139,26 @@ namespace Matematico.Comunication
             return true;
         }
 
+        public bool SendPrivate(string UID, string message)
+        {
+            NetOutgoingMessage om = server.CreateMessage(message);
+
+            try
+            {
+                foreach (var con in server.Connections)
+                    if (NetUtility.ToHexString(con.RemoteUniqueIdentifier) == UID)
+                    {
+                        server.SendMessage(om, con, NetDeliveryMethod.ReliableOrdered, 0);
+                        return true;
+                    }
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+
+            return false;
+        }
         
         public void Shutdown()
         {

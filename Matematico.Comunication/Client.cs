@@ -60,9 +60,7 @@ namespace Matematico.Comunication
                         NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
 
                         if (status == NetConnectionStatus.Connected)
-                        {
                             Status(true);
-                        }
                         else
                             Status(false);
                         break;
@@ -75,6 +73,16 @@ namespace Matematico.Comunication
                         break;
                 }
             }
+        }
+
+        public void AskForNumbers()
+        {
+            Send("/missing numbers");
+        }
+
+        public void AskForTimelimit()
+        {
+            Send("/missing timelimit");
         }
 
         public void Send(string text)

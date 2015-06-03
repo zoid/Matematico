@@ -239,7 +239,6 @@ namespace Matematico.ServerSide.Forms
             this.lb_connectedUsers.Size = new System.Drawing.Size(13, 13);
             this.lb_connectedUsers.TabIndex = 16;
             this.lb_connectedUsers.Text = "0";
-            this.lb_connectedUsers.Visible = false;
             // 
             // label2
             // 

@@ -107,6 +107,7 @@ namespace Matematico.ClientSide.Forms
             this.lb_time.Size = new System.Drawing.Size(23, 17);
             this.lb_time.TabIndex = 2;
             this.lb_time.Text = "5s";
+            this.lb_time.Visible = false;
             // 
             // label_change
             // 
@@ -128,6 +129,7 @@ namespace Matematico.ClientSide.Forms
             this.lb_actualNumber.Size = new System.Drawing.Size(55, 39);
             this.lb_actualNumber.TabIndex = 0;
             this.lb_actualNumber.Text = "11";
+            this.lb_actualNumber.Visible = false;
             // 
             // sideBar_combinations
             // 

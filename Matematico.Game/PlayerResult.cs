@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Matematico.Game
 {
+    [Serializable]
     public class PlayerResult
     {
         public int Total;

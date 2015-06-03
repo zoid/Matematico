@@ -44,6 +44,7 @@ namespace Matematico.ServerSide
         {
             Type = type;
             Names = new Dictionary<string, string>();
+            Results = new List<PlayerResult>();
 
             server = new Server(    new ConnectedCallback(Connected), 
                                     new DisconnectedCallback(Disconnected), 
@@ -116,7 +117,41 @@ namespace Matematico.ServerSide
    
                     break;
 
+                case CommandType.Missing:
+                    switch (CommandParser.GetContent(message))
+                    {
+                        case "numbers":
+                            server.SendPrivate(userId, "/numbers " + String.Join(";", Numbers));
+                            break;
+
+                        case "timelimit":
+                            server.SendPrivate(userId, "/timelimit " + Timelimit);
+                            break;
+                    }
+
+                    server.SendPrivate(userId, "/start");
+                    break;
+
                 case CommandType.Result:
+                    PlayerResult result = PlayerResult.Unpack(CommandParser.GetContent(message));
+
+                    Results.Add(result);
+
+                    if (Results.Count == server.GetConnections().Length)
+                    {
+                        Form.Results.Items.Clear();
+
+                        string text;
+                        Results = Results.OrderBy(item => item.Total).ToList<PlayerResult>();
+
+                        foreach (var item in Results)
+                        {
+                            text = item.Total + "b. - " + item.Name;
+                            if (item.Missing > 0) text += " (" + item.Missing + ") {MISSING}";
+
+                            Form.Results.Items.Add(text);
+                        }
+                    }
 
                     break;
             }
