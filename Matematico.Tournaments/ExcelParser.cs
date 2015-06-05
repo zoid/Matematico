@@ -21,7 +21,7 @@ namespace Matematico.Tournaments
                                     "možnost \"Ukládat výsledky do excelu\"");
             }
 
-            app.Visible = true;
+            app.Visible = false;
 
             Excel.Workbook wb = app.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
             Sheet = (Excel.Worksheet)wb.Worksheets[1];
@@ -30,15 +30,19 @@ namespace Matematico.Tournaments
         public void CreateHeader(string tournamentName)
         {
             Sheet.Cells[1, 1] = "Název Turnaje: ";
+            Sheet.Cells[1, 1].Font.Bold = true;
+
             Sheet.Cells[1, 2] = tournamentName;
 
-            Sheet.get_Range("A:A", System.Type.Missing).EntireColumn.ColumnWidth = 100;
+            Sheet.get_Range("A:A", System.Type.Missing).EntireColumn.ColumnWidth = 20;
 
-            Sheet.Cells[2, 1] = "Jméno";
-            Sheet.Cells[2, 2] = "1. kolo";
-            Sheet.Cells[2, 3] = "2. kolo";
-            Sheet.Cells[2, 4] = "3. kolo";
-            Sheet.Cells[2, 5] = "Celkem";
+            Sheet.Cells[3, 1].EntireRow.Font.Bold = true;
+
+            Sheet.Cells[3, 1] = "Jméno";
+            Sheet.Cells[3, 2] = "1. kolo";
+            Sheet.Cells[3, 3] = "2. kolo";
+            Sheet.Cells[3, 4] = "3. kolo";
+            Sheet.Cells[3, 5] = "Celkem";
         }
 
         public void WriteNames(string[] names)
@@ -51,7 +55,7 @@ namespace Matematico.Tournaments
 
             for (int i = 0; i < names.Length;i++ )
             {
-                Sheet.Cells[3 + i, 1] = names[i];
+                Sheet.Cells[4 + i, 1] = names[i];
             }
         }
     }

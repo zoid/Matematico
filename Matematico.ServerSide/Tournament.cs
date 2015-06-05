@@ -26,7 +26,7 @@ namespace Matematico.ServerSide
 
         public Round[] Rounds;
         
-        public int Round;
+        public int ARound;
 
         public Tournament(int points)
         {
@@ -36,7 +36,7 @@ namespace Matematico.ServerSide
             Rounds[1] = new Round(GameType.Minimum);
             Rounds[2] = new Round(GameType.Exactly, points);
 
-            Round = 1;
+            ARound = 1;
 
             ExcelParser parser = new ExcelParser();
 
@@ -46,13 +46,12 @@ namespace Matematico.ServerSide
 
         public void Start()
         {
-            Round r = Rounds[Round];
-            Game = new LanGame(r.Type);
+            Game = new LanGame(Rounds[ARound].Type);
         }
 
-        public void Stop()
+        public void Stop(GameResult result)
         {
-
+            Rounds[ARound].Result = result;
         }
 
         private void StartRound(int round)

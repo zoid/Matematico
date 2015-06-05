@@ -40,8 +40,14 @@ namespace Matematico.ServerSide
         int Index;
         int Timelimit;
 
+        //Tournament
+        private bool IsTournament;
+        private Tournament Tournament;
+
         public LanGame(GameType type)
         {
+            IsTournament = false;
+
             Type = type;
             Names = new Dictionary<string, string>();
             Results = new List<PlayerResult>();
@@ -60,6 +66,33 @@ namespace Matematico.ServerSide
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = 100;
             timer.Enabled = false;
+        }
+
+        public LanGame(GameType type, Tournament tournament)
+        {
+            IsTournament = true;
+
+            Type = type;
+            Tournament = tournament;
+            
+            Names = new Dictionary<string, string>();
+            Results = new List<PlayerResult>();
+
+            server = new Server(new ConnectedCallback(Connected),
+                                    new DisconnectedCallback(Disconnected),
+                                    new MessageCallback(RecieveMessage)
+                               );
+
+            // Register server event
+            Application.Idle += new EventHandler(server.WaitForMessage);
+
+            Form = new GameForm(this);
+
+            timer = new Timer();
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Interval = 100;
+            timer.Enabled = false;
+
         }
 
         public void ShowForm()
