@@ -23,6 +23,7 @@ namespace Matematico.Game
             return mis;
         }
 
+
         public static int[] Lines(int[,] board)
         {
             int[] points = new int[5];
@@ -35,7 +36,7 @@ namespace Matematico.Game
                     line[i] = board[i, j];
                 }
 
-                points[j] = calc(line);
+                points[j] = Calculate(line);
             }
 
             return points;
@@ -53,7 +54,7 @@ namespace Matematico.Game
                     line[i] = board[j, i];
                 }
 
-                points[j] = calc(line);
+                points[j] = Calculate(line);
             }
 
             return points;
@@ -74,113 +75,52 @@ namespace Matematico.Game
                 }
             }
                 
-            points[0] = calc(line);
-            points[1] = calc(line2);
+            points[0] = Calculate(line);
+            points[1] = Calculate(line2);
 
             return points;
         }
 
-        private static int calc(int[] line)
+
+        private static int Calculate(int[] line)
         {
-            int t_points = 0;
-            Array.Sort(line);
-
-            if (onePair(line)) t_points = 1;
-            if (twoPairs(line)) t_points = 3;
-
-            if (straight3(line) && !(straight4(line) || straight5(line))) t_points += 1;
-            if (straight4(line) && !straight5(line)) t_points += 3;
-            if (straight5(line)) t_points = 6;
-
-            if (tripple(line)) t_points = 4;
-            if (fullHouse(line)) t_points = 5;
-            if (poker(line)) t_points = 4;
-
-            return t_points;
+            return PairPoints(line) + StraightPoints(line);
         }
 
-        private static bool onePair(int[] line)
+        private static int PairPoints(int[] line)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                if (isPair(line[i], line[i + 1]))
-                    return true;
-            }
-            return false;
+            int[] arr = line.GroupBy(p => p).Where(g => g.Count() > 1).Select(g => g.Count()).ToArray();
+
+            int points = arr.Sum() + arr.Length - 2;
+
+            if (points == 3) points = 4;
+            else if (points == 4) points = 3;
+
+            if (points < 0) points = 0;
+            return points;
         }
 
-        private static bool twoPairs(int[] line)
+        private static int StraightPoints(int[] line)
         {
-            int pairs = 0;
-            int before = 0;
+            int lenght;
+            
+            int.TryParse(line.OrderBy(x => x)
+                             .Zip(line.Skip(1).OrderBy(x => x), (x, y) => y - x)
+                             .GroupBy(x => x)
+                             .Select((count, item) => new { count = count.Count(), item = count.Key })
+                             .Where(x => x.item == 1)
+                             .Select(x => x.count)
+                             .FirstOrDefault()
+                             .ToString(), out lenght);
 
-            for (int i = 0; i < 4; i++)
+            switch (lenght)
             {
-                if (isPair(line[i], line[i + 1]))
-                {
-                    if (before != line[i])
-                        pairs++;
-                }
-
-                before = line[i];
+                case 2: return 1;
+                case 3: return 3;
+                case 4: return 6;
             }
 
-            return (pairs == 2);
-        }
-
-        private static bool tripple(int[] line)
-        {
-            int before = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                if (isPair(line[i], line[i + 1]))
-                {
-                    if (before == line[i])
-                        return true;
-                }
-
-                before = line[i];
-            }
-
-            return false;
-        }
-
-        private static bool fullHouse(int[] line) { return (tripple(line) && isPairNotTripple(line)); }
-        private static bool poker(int[] line) { return (line[0] == line[4] || line[1] == line[4]); }
-        private static bool straight3(int[] line) { return (number_straight(line) == 3); }
-        private static bool straight4(int[] line) { return (number_straight(line) == 4); }
-        private static bool straight5(int[] line) { return (number_straight(line) == 5); }
-
-
-        private static bool isPair(int a, int b)
-        {
-            return (a == b && a != 0);
-        }
-
-        private static bool isPairNotTripple(int[] line)
-        {
-            if(line[0] == line[1] && line[1] != line[2])
-                return true;
-            if(line[3] == line[4] && line[2] != line[3])
-                return true;
-
-            return false;
-        }
-
-        private static int number_straight(int[] line)
-        {
-            int inline = 1;
-            for (int i = 0; i < 4; i++)
-            {
-                if (line[i] == line[i + 1] - 1)
-                {
-                    inline++;
-                }
-                else if (inline != 1) break;
-                else inline = 1;
-            }
-
-            return ((inline < 3) ? 0 : inline);
+            return 0;
         }
     }
 }
