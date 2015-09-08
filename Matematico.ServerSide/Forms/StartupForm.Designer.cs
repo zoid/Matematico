@@ -28,48 +28,47 @@ namespace Matematico.ServerSide.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.bt_newGame = new System.Windows.Forms.Button();
-            this.bt_turnaj = new System.Windows.Forms.Button();
+            this.screen_game = new Matematico.ServerSide.Screens.GameScreen();
+            this.screen_startup = new Matematico.ServerSide.Screens.StartupScreen();
             this.SuspendLayout();
             // 
-            // bt_newGame
+            // screen_game
             // 
-            this.bt_newGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bt_newGame.Location = new System.Drawing.Point(41, 35);
-            this.bt_newGame.Name = "bt_newGame";
-            this.bt_newGame.Size = new System.Drawing.Size(184, 43);
-            this.bt_newGame.TabIndex = 0;
-            this.bt_newGame.Text = "Nová hra po síti";
-            this.bt_newGame.UseVisualStyleBackColor = true;
-            this.bt_newGame.Click += new System.EventHandler(this.bt_newGame_Click);
+            this.screen_game.BackColor = System.Drawing.Color.White;
+            this.screen_game.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.screen_game.Form = null;
+            this.screen_game.Location = new System.Drawing.Point(20, 60);
+            this.screen_game.Name = "screen_game";
+            this.screen_game.Size = new System.Drawing.Size(995, 499);
+            this.screen_game.TabIndex = 8;
             // 
-            // bt_turnaj
+            // screen_startup
             // 
-            this.bt_turnaj.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bt_turnaj.Location = new System.Drawing.Point(41, 84);
-            this.bt_turnaj.Name = "bt_turnaj";
-            this.bt_turnaj.Size = new System.Drawing.Size(184, 43);
-            this.bt_turnaj.TabIndex = 3;
-            this.bt_turnaj.Text = "Nový Turnaj";
-            this.bt_turnaj.UseVisualStyleBackColor = true;
-            this.bt_turnaj.Click += new System.EventHandler(this.bt_turnaj_Click);
+            this.screen_startup.BackColor = System.Drawing.Color.White;
+            this.screen_startup.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.screen_startup.Form = null;
+            this.screen_startup.Location = new System.Drawing.Point(20, 60);
+            this.screen_startup.Name = "screen_startup";
+            this.screen_startup.Size = new System.Drawing.Size(995, 499);
+            this.screen_startup.TabIndex = 7;
             // 
             // StartupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(261, 150);
-            this.Controls.Add(this.bt_turnaj);
-            this.Controls.Add(this.bt_newGame);
+            this.ClientSize = new System.Drawing.Size(1035, 579);
+            this.Controls.Add(this.screen_game);
+            this.Controls.Add(this.screen_startup);
             this.Name = "StartupForm";
-            this.Text = "Matematico";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.StartupForm_FormClosed);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button bt_newGame;
-        private System.Windows.Forms.Button bt_turnaj;
+        private Matematico.ServerSide.Screens.StartupScreen startup_screen;
+        public Screens.StartupScreen screen_startup;
+        public Screens.GameScreen screen_game;
     }
 }

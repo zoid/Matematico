@@ -162,7 +162,8 @@ namespace Matematico.Comunication
         
         public void Shutdown()
         {
-            server.Shutdown("Requested by user");
+            if(server != null)
+                server.Shutdown("Requested by user");
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Matematico.ServerSide
 {
     public class Tournament
     {
+        TournamentStartForm ConnectionForm;
         LanGame Game;
 
         private List<string> users;
@@ -38,6 +39,8 @@ namespace Matematico.ServerSide
 
             ARound = 1;
 
+            ConnectionForm = new TournamentStartForm();
+
             ExcelParser parser = new ExcelParser();
 
             parser.CreateHeader("turnaj1");
@@ -46,17 +49,30 @@ namespace Matematico.ServerSide
 
         public void Start()
         {
-            Game = new LanGame(Rounds[ARound].Type);
+            //Game = new LanGame(Rounds[ARound].Type);
         }
 
-        public void Stop(GameResult result)
+        public void Stop()
         {
-            Rounds[ARound].Result = result;
+
         }
 
         private void StartRound(int round)
         {
 
+        }
+
+        public void StopRound(GameResult result)
+        {
+            Rounds[ARound].Result = result;
+
+            ARound++;
+
+            if (ARound == Rounds.Length)
+            {
+                Stop();
+                return;
+            }
         }
     }
 }

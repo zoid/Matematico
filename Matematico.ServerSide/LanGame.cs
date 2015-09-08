@@ -11,6 +11,7 @@ using Lidgren.Network;
 using Matematico.Comunication;
 using Matematico.Game;
 using Matematico.ServerSide.Forms;
+using Matematico.ServerSide.Screens;
 
 namespace Matematico.ServerSide
 {
@@ -26,12 +27,12 @@ namespace Matematico.ServerSide
         //Game informations
         private GameType Type;
         public bool Active = false;
+        public bool Ended = false;
 
         //Players informations
-        public Dictionary<string, string> Names;
-        public List<PlayerResult> Results;
+        public GameResult Results;
 
-        private GameForm Form;
+        private GameScreen Screen;
         public Server server;
 
         //Timer
@@ -44,13 +45,14 @@ namespace Matematico.ServerSide
         private bool IsTournament;
         private Tournament Tournament;
 
-        public LanGame(GameType type)
+        public LanGame(GameScreen screen, GameType type)
         {
+            Screen = screen;
+
             IsTournament = false;
 
-            Type = type;
-            Names = new Dictionary<string, string>();
-            Results = new List<PlayerResult>();
+            Type = type;          
+            Results = new GameResult();
 
             server = new Server(    new ConnectedCallback(Connected), 
                                     new DisconnectedCallback(Disconnected), 
@@ -60,25 +62,23 @@ namespace Matematico.ServerSide
             // Register server event
             Application.Idle += new EventHandler(server.WaitForMessage);
 
-            Form = new GameForm(this);
-
             timer = new Timer();
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = 100;
             timer.Enabled = false;
         }
 
-        public LanGame(GameType type, Tournament tournament)
+        public LanGame(GameScreen screen, GameType type, Tournament tournament)
         {
+            Screen = screen;
             IsTournament = true;
 
             Type = type;
             Tournament = tournament;
             
-            Names = new Dictionary<string, string>();
-            Results = new List<PlayerResult>();
+            Results = new GameResult();
 
-            server = new Server(new ConnectedCallback(Connected),
+            server = new Server(    new ConnectedCallback(Connected),
                                     new DisconnectedCallback(Disconnected),
                                     new MessageCallback(RecieveMessage)
                                );
@@ -86,8 +86,6 @@ namespace Matematico.ServerSide
             // Register server event
             Application.Idle += new EventHandler(server.WaitForMessage);
 
-            Form = new GameForm(this);
-
             timer = new Timer();
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = 100;
@@ -95,35 +93,38 @@ namespace Matematico.ServerSide
 
         }
 
-        public void ShowForm()
+        public void StartListening(short port)
         {
-            server.Configure(21);
+            server.Configure(port);
             server.Start();
-     
-            Form.Show();
-            Form.DisplayItems(false);
+
+            Screen.RefreshGUI();
+        }
+
+        public void StopListening()
+        {
+            server.Shutdown();
         }
 
         public void Start()
         {
             Numbers = GenerateNumbers();
-            Timelimit = Form.TimeBar.Value;
+            Timelimit = Screen.TimeBar.Value;
             Tick = Timelimit * 10;
             Index = 0;
+
+            Active = true;
 
             server.Send("/timelimit " + Timelimit.ToString());
             server.Send("/numbers " + String.Join(";", Numbers));
             server.Send("/start");
 
             //Show form items
-            Form.DisplayItems();
-        
-            //Clear result box
-            Form.Results.Items.Clear();
+            Screen.RefreshGUI();
 
             //Setup progress bar
-            Form.Progress.Maximum = Tick;
-            Form.Progress.Value = Tick;
+            Screen.Progress.Maximum = Tick;
+            Screen.Progress.Value = Tick;
 
             //Start timer
             timer.Start();
@@ -132,7 +133,12 @@ namespace Matematico.ServerSide
         public void Stop()
         {
             timer.Stop();
+            Active = false;
+
+            Ended = true;
+            Screen.StartButton.Text = "Pøipravit";
         }
+
 
         public void RecieveMessage(string userId, string message)
         {
@@ -141,15 +147,6 @@ namespace Matematico.ServerSide
 
             switch (type)
             {
-                case CommandType.Name:
-                    if (Names.ContainsKey(userId))
-                        Names.Remove(userId);
-
-                    Names.Add(userId, CommandParser.GetContent(message));
-                    Form.Users.Invalidate();   
-   
-                    break;
-
                 case CommandType.Missing:
                     switch (CommandParser.GetContent(message))
                     {
@@ -168,22 +165,23 @@ namespace Matematico.ServerSide
                 case CommandType.Result:
                     PlayerResult result = PlayerResult.Unpack(CommandParser.GetContent(message));
 
-                    Results.Add(result);
+                    Results.Players.Add(result);
 
-                    if (Results.Count == server.GetConnections().Length)
+                    if (Results.Players.Count == server.GetConnections().Length)
                     {
-                        Form.Results.Items.Clear();
-
                         string text;
-                        Results = Results.OrderBy(item => item.Total).ToList<PlayerResult>();
 
-                        foreach (var item in Results)
+                        foreach (var item in Results.Players.OrderByDescending(item => item.Total).ToList<PlayerResult>())
                         {
-                            text = item.Total + "b. - " + item.Name;
-                            if (item.Missing > 0) text += " (" + item.Missing + ") {MISSING}";
-
-                            Form.Results.Items.Add(text);
+                            text = item.Name;
+                            Screen.Users.AddScore(text, item.Total, item.Missing);
                         }
+
+                        if(IsTournament)
+                        {
+                            Tournament.StopRound(Results);
+                        }
+
                     }
 
                     break;
@@ -194,26 +192,26 @@ namespace Matematico.ServerSide
 
         public void Connected(string UID, string Username)
         {
-            if(Names.ContainsKey(UID)) Names.Remove(UID);
-            Names.Add(UID, Username);
-            
-            Form.Users.Items.Add(Names[UID]);
-            Form.ConnectedUsers.Text = server.GetConnections().Length.ToString();
+            Screen.Users.AddUser(UID, Username);
 
-            if (server.GetConnections().Length > 0) Form.StartButton.Enabled = true;
+            if (Screen.Users.ConnectedUsers > 0) 
+               Screen.StartButton.Enabled = true;
         }
 
         public void Disconnected(string UID)
         {
-            if (Names.ContainsKey(UID))
+            Screen.Users.RemoveUser(UID);
+
+            if (Screen.Users.ConnectedUsers == 0) 
+                Screen.StartButton.Enabled = false;
+        }
+
+        public void RefreshUserList()
+        {
+            foreach(string uid in server.GetConnections())
             {
-                Form.Users.Items.RemoveAt(Form.Users.FindStringExact(Names[UID]));
-                Names.Remove(UID);
+                Screen.Users.RemoveScore(uid);
             }
-
-            Form.ConnectedUsers.Text = server.GetConnections().Length.ToString();
-
-            if (server.GetConnections().Length == 0) Form.StartButton.Enabled = false;
         }
 
 
@@ -240,7 +238,7 @@ namespace Matematico.ServerSide
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            Form.Progress.Value = Tick;
+            Screen.Progress.Value = Tick;
 
             if(Tick > 0)
             {
@@ -257,8 +255,8 @@ namespace Matematico.ServerSide
                 return;
             }
 
-            Form.Number.Text = Numbers[Index].ToString();
-            Form.NumbersCount.Text = (Index + 1).ToString();
+           Screen.Number.Text = Numbers[Index].ToString();
+           Screen.NumberCount.Text = (Index + 1).ToString();
         }
     }
 }

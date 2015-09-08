@@ -21,7 +21,7 @@ namespace Matematico.Tournaments
                                     "možnost \"Ukládat výsledky do excelu\"");
             }
 
-            app.Visible = false;
+            app.Visible = true;
 
             Excel.Workbook wb = app.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
             Sheet = (Excel.Worksheet)wb.Worksheets[1];

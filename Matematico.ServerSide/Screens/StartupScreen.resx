@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,4 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Vítejte ve hře Matematico. 
+
+Tento program slouží jako server, na který se připojí hráči.
+Po spuštění hry se všem hráčum vygenerují stejná čísla, která se budou postupně ukazovat 
+jak hráčům na jejich obrazovkách tak i zde pro možnost promítání. 
+
+Po uplynutí časového limitu na úmístění všech 25 čísel se automaticky spočítají výsledky a odešlou se zpět na server, kde se zobrazí konečné pořadí.</value>
+  </data>
 </root>

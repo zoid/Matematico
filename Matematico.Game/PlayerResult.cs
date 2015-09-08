@@ -20,6 +20,8 @@ namespace Matematico.Game
         public int[] Column;
         public int[] Diagonal;
 
+        public int[,] Board;
+
         public PlayerResult(string username, int[,] board)
         {
             Missing = Points.Missing(board);
@@ -31,6 +33,7 @@ namespace Matematico.Game
             Total = Line.Sum() + Column.Sum() + Diagonal.Sum();
 
             Name = username;
+            Board = board;
         }
 
         // Deserialization constructor.
@@ -43,6 +46,8 @@ namespace Matematico.Game
             Line = (int[])info.GetValue("Line", typeof(int[]));
             Column = (int[])info.GetValue("Column", typeof(int[]));
             Diagonal = (int[])info.GetValue("Diagonal", typeof(int[]));
+
+            Board = (int[,])info.GetValue("Board", typeof(int[,]));
         }
 
         // Serialization
@@ -55,6 +60,8 @@ namespace Matematico.Game
             info.AddValue("Line", Line);
             info.AddValue("Column", Column);
             info.AddValue("Diagonal", Diagonal);
+
+            info.AddValue("Board", Board);
         }
 
         public string Pack()

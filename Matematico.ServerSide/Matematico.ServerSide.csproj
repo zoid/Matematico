@@ -44,6 +44,9 @@
     <Reference Include="Matematico.Tournaments">
       <HintPath>..\Matematico.Tournaments\bin\Debug\Matematico.Tournaments.dll</HintPath>
     </Reference>
+    <Reference Include="MetroFramework">
+      <HintPath>packages\ModernUI.1.3.0.0\lib\net40\MetroFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -56,17 +59,29 @@
   <ItemGroup>
     <Compile Include="CommandParser.cs" />
     <Compile Include="CommandType.cs" />
-    <Compile Include="Forms\GameForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Components\UserList.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\GameForm.Designer.cs">
-      <DependentUpon>GameForm.cs</DependentUpon>
+    <Compile Include="Components\UserList.Designer.cs">
+      <DependentUpon>UserList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\GameScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\GameScreen.Designer.cs">
+      <DependentUpon>GameScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\StartupForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\StartupForm.Designer.cs">
       <DependentUpon>StartupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\StartupScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\StartupScreen.Designer.cs">
+      <DependentUpon>StartupScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TournamentStartForm.cs">
       <SubType>Form</SubType>
@@ -76,18 +91,41 @@
     </Compile>
     <Compile Include="LanGame.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Tournament.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\GameForm.resx">
-      <DependentUpon>GameForm.cs</DependentUpon>
+    <EmbeddedResource Include="Components\UserList.resx">
+      <DependentUpon>UserList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\GameScreen.resx">
+      <DependentUpon>GameScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StartupForm.resx">
       <DependentUpon>StartupForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\StartupScreen.resx">
+      <DependentUpon>StartupScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\TournamentStartForm.resx">
       <DependentUpon>TournamentStartForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\closebutton_white3.png" />
+    <None Include="Resources\closebutton_grey3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\matematico_logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

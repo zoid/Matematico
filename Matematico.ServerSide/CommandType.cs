@@ -9,7 +9,6 @@ namespace Matematico.ServerSide
     public enum CommandType
     {
         NaC, 
-        Name, 
         Result,
         Missing
     }
